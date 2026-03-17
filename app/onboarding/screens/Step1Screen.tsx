@@ -3,15 +3,15 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { FontFamily } from '../../../constants/GlobalStyles';
 
-export default function WelcomeScreen() {
+export default function Step1Screen() {
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <MaterialCommunityIcons name="hospital-building" size={64} color="#3B82F6" />
+        <MaterialCommunityIcons name="chart-line" size={64} color="#10B981" />
       </View>
-      <Text style={styles.title}>Bem-vindo ao MedConnect</Text>
+      <Text style={styles.title}>Monitore os Sinais Vitais</Text>
       <Text style={styles.description}>
-        Sua saúde conectada em um só lugar. Monitore seus sinais vitais e mantenha seu histórico médico sempre acessível.
+        Acompanhe pressão arterial, frequência cardíaca, temperatura e outros indicadores importantes para a saúde.
       </Text>
     </View>
   );
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: '#F0FDF4',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 32,
