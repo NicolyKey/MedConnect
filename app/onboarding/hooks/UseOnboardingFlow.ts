@@ -22,6 +22,10 @@ export default function useOnboardingFlow() {
     }
   };
 
+  const skipToEnd = () => {
+    setCurrentStep(totalSteps - 1);
+  };
+
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === totalSteps - 1;
 
@@ -31,6 +35,7 @@ export default function useOnboardingFlow() {
     nextStep,
     previousStep,
     goToStep,
+    skipToEnd,
     isFirstStep,
     isLastStep,
   };

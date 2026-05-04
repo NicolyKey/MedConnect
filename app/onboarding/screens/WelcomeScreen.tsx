@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { FontFamily } from '../../../constants/GlobalStyles';
@@ -6,9 +5,6 @@ import { FontFamily } from '../../../constants/GlobalStyles';
 export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
-      <View style={styles.iconContainer}>
-        <MaterialCommunityIcons name="hospital-building" size={64} color="#3B82F6" />
-      </View>
       <Text style={styles.title}>Bem-vindo ao MedConnect</Text>
       <Text style={styles.description}>
         Sua saúde conectada em um só lugar. Monitore seus sinais vitais e mantenha seu histórico médico sempre acessível.
@@ -24,17 +20,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 32,
   },
-  iconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#EFF6FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 32,
-  },
   title: {
     fontSize: 28,
+    fontWeight: 'bold',
     fontFamily: FontFamily.bold,
     color: '#1F2937',
     textAlign: 'center',

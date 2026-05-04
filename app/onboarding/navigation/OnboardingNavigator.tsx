@@ -1,5 +1,5 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { ImageBackground, PanResponder, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import StepIndicator from '../components/StepIndicator';
 import useOnboardingFlow from '../hooks/UseOnboardingFlow';
 import AuthScreen from '../screens/AuthScreen';
@@ -8,7 +8,21 @@ import Step2Screen from '../screens/Step2Screen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 
 export default function OnboardingNavigator() {
-  const { currentStep, totalSteps, nextStep, previousStep, isFirstStep, isLastStep } = useOnboardingFlow();
+  const { currentStep, totalSteps, nextStep, previousStep, skipToEnd, isFirstStep, isLastStep } = useOnboardingFlow();
+
+  const panResponder = useMemo(
+    () => PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        return Math.abs(gestureState.dx) > 10;
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dx < -50 && !isLastStep) {
+          nextStep();
+        } else if (gestureState.dx > 50 && !isFirstStep) {
+          previousStep();
+        }
+      },
+    }), [isFirstStep, isLastStep, nextStep, previousStep]);
 
   const renderScreen = () => {
     switch (currentStep) {
@@ -27,32 +41,39 @@ export default function OnboardingNavigator() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <View style={styles.content} {...panResponder.panHandlers}>
         {renderScreen()}
       </View>
 
       {!isLastStep && (
-        <View style={styles.footer}>
-          <StepIndicator currentStep={currentStep} totalSteps={totalSteps} />
-          
+        <ImageBackground 
+          source={currentStep === 0 ? require('@/assets/images/Ellipse 7.png') : undefined}
+          style={styles.footer}
+          resizeMode="stretch"
+        >
           <View style={styles.buttonContainer}>
-            {!isFirstStep && (
-              <TouchableOpacity 
-                style={[styles.button, styles.buttonSecondary]} 
-                onPress={previousStep}
-              >
-                <Text style={styles.buttonSecondaryText}>Voltar</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity 
+              style={[
+                styles.button, 
+                currentStep === 0 ? styles.buttonSecondaryWhite : styles.buttonSecondary
+              ]} 
+              onPress={skipToEnd}
+            >
+              <Text style={[
+                styles.buttonSecondaryText,
+                currentStep === 0 && styles.buttonSecondaryTextWhite
+              ]}>Pular</Text>
+            </TouchableOpacity>
             
             <TouchableOpacity 
-              style={[styles.button, styles.buttonPrimary, isFirstStep && styles.buttonFull]} 
+              style={[styles.button, styles.buttonPrimary]} 
               onPress={nextStep}
             >
               <Text style={styles.buttonPrimaryText}>Próximo</Text>
             </TouchableOpacity>
           </View>
-        </View>
+          <StepIndicator currentStep={currentStep} totalSteps={totalSteps} />
+        </ImageBackground>
       )}
     </SafeAreaView>
   );
@@ -69,6 +90,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 32,
     paddingBottom: 32,
+    height: 150,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -85,9 +107,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F24D50',
   },
   buttonSecondary: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#F9D2DB',
+  },
+  buttonSecondaryWhite: {
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: '#F24D50',
   },
   buttonFull: {
     flex: 1,
@@ -98,8 +123,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   buttonSecondaryText: {
-    color: '#374151',
+    color: '#930611',
     fontSize: 16,
     fontWeight: '600',
+  },
+  buttonSecondaryTextWhite: {
+    color: '#F24D50',
   },
 });
